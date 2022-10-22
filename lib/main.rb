@@ -1,47 +1,37 @@
 # frozen_string_literal: true
 
 require_relative 'game'
+require_relative 'load'
 require_relative 'board'
+require_relative 'player'
+require_relative 'piece'
+require_relative 'pawn'
+require_relative 'knight'
+require_relative 'bishop'
+require_relative 'rook'
+require_relative 'queen'
+require_relative 'king'
 
-def game_mode_input
-  puts <<~HEREDOC
+def introduction
+  <<-HEREDOC
+    Welcome to my command line chess game.
+    This a player vs player game.
+    There is no AI implemented.
 
-    1) Human vs Human
-    2) Human vs Computer
-    3) Computer vs Human
-    4) Computer vs Computer
-
-    Chose a game mode by entering the corresponding number.
   HEREDOC
-  gets.chomp.to_i
 end
 
-def game_mode
-  loop do
-    input = gamemode_input
-    return input if [1, 2, 3].include?(input)
-
-    puts 'Invalid input'
-    sleep 1
-    redo
-  end
+def load_game?
+  load_input == '1'
 end
 
-def create_players(mode)
-  case mode
-  when 1
-    [HumanPlayer.new, HumanPlayer.new]
-  when 2
-    [HumanPlayer.new, ComputerPlayer.new]
-  when 3
-    [ComputerPlayer.new, HumanPlayer.new]
-  when 4
-    [ComputerPlayer.new, ComputerPlayer.new]
-  end
+def load_input
+  puts 'Enter 1 to load a game, or any other input to start a new game:'
+  gets.chomp
 end
 
-players = create_players(game_mode)
-board = Board.new
-game = game.new(board, players)
+DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
-play(game)
+puts introduction
+game = load_game? ? Game.new(Load.fen) : Game.new(DEFAULT_FEN)
+game.play
