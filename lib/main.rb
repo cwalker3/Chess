@@ -1,37 +1,48 @@
 # frozen_string_literal: true
 
 require_relative 'game'
-require_relative 'load'
+require_relative 'save_load'
+require_relative 'fen'
 require_relative 'board'
 require_relative 'player'
-require_relative 'piece'
-require_relative 'pawn'
-require_relative 'knight'
-require_relative 'bishop'
-require_relative 'rook'
-require_relative 'queen'
-require_relative 'king'
+require_relative 'display'
+require_relative 'pieces/piece'
+require_relative 'pieces/pawn'
+require_relative 'pieces/knight'
+require_relative 'pieces/bishop'
+require_relative 'pieces/rook'
+require_relative 'pieces/queen'
+require_relative 'pieces/king'
+require_relative 'movement/movement'
+require_relative 'movement/pawn_movement'
+require_relative 'movement/knight_movement'
+require_relative 'movement/bishop_movement'
+require_relative 'movement/rook_movement'
+require_relative 'movement/king_movement'
 
-def introduction
-  <<-HEREDOC
-    Welcome to my command line chess game.
-    This a player vs player game.
-    There is no AI implemented.
+system('clear')
+puts <<~INTRODUCTION
 
-  HEREDOC
+  This is a player vs player command line chess game.
+
+
+  Enter the number for the corresponding option:
+    1) Start a new game
+    2) Load a game
+    3) Start a game from a FEN string
+
+INTRODUCTION
+
+choice = gets.chomp.to_i until [1, 2, 3].include?(choice)
+case choice
+when 1
+  game = Game.from_fen(Fen.new)
+when 2
+  game = Game.load
+when 3
+  puts 'Enter a valid FEN string:'
+  fen = gets.chomp
+  game = Game.from_fen(Fen.new(fen))
 end
 
-def load_game?
-  load_input == '1'
-end
-
-def load_input
-  puts 'Enter 1 to load a game, or any other input to start a new game:'
-  gets.chomp
-end
-
-DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
-
-puts introduction
-game = load_game? ? Game.new(Load.fen) : Game.new(DEFAULT_FEN)
 game.play
