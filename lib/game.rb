@@ -9,34 +9,32 @@ class Game
 
   attr_reader :board, :players, :history, :halfmove, :current_player
 
-  def self.from_fen(fen)
-    board = Board.from_fen(fen)
-    current_player = fen.current_player
-    halfmove = fen.halfmove
-    new(board, current_player, halfmove)
-  end
-
-  def initialize(board, current_player = :white, halfmove = 0)
-    @board = board
+  def initialize(fen)
+    @board = Board.new(fen)
     @players = [Player.new(:white), Player.new(:black)]
-    @halfmove = halfmove
-    @current_player = current_player == :white ? players[0] : players[1]
+    @current_player = fen.current_player == :white ? players[0] : players[1]
+    @halfmove = fen.halfmove
     @history = [board.sudo_fen]
   end
 
   def play
     until game_over?(current_player.color)
       player_turn
+      @history << board.sudo_fen
       @current_player = next_player
     end
     end_game(current_player.color)
   end
 
   def player_turn
-    coords = player_choose_piece
-    move_coords = player_choose_move(coords)
-    update_halfmove(coords, move_coords)
-    board.update_board(coords, move_coords, self)
+    piece_choice, move_choice = nil
+    loop do
+      piece_choice = player_choose_piece
+      move_choice = player_choose_move(piece_choice)
+      break unless move_choice == :back
+    end
+    update_halfmove(piece_choice, move_choice)
+    board.update_board(piece_choice, move_choice)
   end
 
   def player_choose_piece
@@ -53,27 +51,23 @@ class Game
     end
   end
 
-  def valid_piece?(choice)
-    choice.length == 2 && board.valid_piece?(choice) && board.color_at(choice) == current_player.color
-  end
-
   def player_choose_move(coords)
     loop do
       board.display_moves(coords)
       choice = current_player.choose_move
-      player_turn if choice == :back
-      return choice if board.valid_move_choice?(coords, choice)
+      return choice if board.valid_move_choice?(coords, choice) || choice == :back
 
       invalid_choice
     end
   end
 
   def update_halfmove(piece_coords, move_coords)
-    if board.board[move_coords].is_a?(Piece) || board.board[piece_coords].is_a?(Pawn)
-      @halfmove = 0
-    else
-      @halfmove += 1
-    end
+    @halfmove =
+      if board.occupied?(move_coords) || board.board[piece_coords].is_a?(Pawn)
+        0
+      else
+        halfmove + 1
+      end
   end
 
   def next_player
@@ -87,6 +81,18 @@ class Game
   def end_game(color)
     board.display
     sleep 1
+    end_game_message(color)
+    sleep 2
+    exit_game
+  end
+
+  private
+
+  def valid_piece?(choice)
+    choice.length == 2 && board.valid_piece?(choice) && board.color_at(choice) == current_player.color
+  end
+
+  def end_game_message(color)
     if board.checkmate?(color)
       puts "Checkmate, #{next_player.color.capitalize} wins."
     elsif board.stalemate?(color)
@@ -98,11 +104,7 @@ class Game
     elsif three_rep?
       puts 'Position reached 3 times, game ends in a draw.'
     end
-    sleep 2
-    exit_game
   end
-
-  private
 
   def three_rep?
     history.tally.values.include?(3)
@@ -132,11 +134,6 @@ class Game
   def invalid_choice
     puts 'Invalid choice.'
     sleep 1
-  end
-
-  def prompt_continue
-    puts "Enter 'y' to continue playing:"
-    exit_game unless gets.chomp == 'y'
   end
 
   def exit_game

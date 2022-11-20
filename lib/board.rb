@@ -4,35 +4,29 @@ require_relative 'movement/castle'
 require_relative 'movement/en_passant'
 require_relative 'display'
 require_relative 'promote'
+require_relative 'fen_writer'
 
 # board class for chess
 class Board
+  include Display
   include Castle
   include EnPassant
-  include Display
   include Promote
-
-  def self.from_fen(fen)
-    board = fen.board
-    castle_rights = fen.castle_rights
-    en_passant = fen.en_passant
-    new(board, castle_rights, en_passant)
-  end
+  include FenWriter
 
   attr_accessor :board, :castle_rights, :en_passant_target, :history
 
-  def initialize(board, castle_rights, en_passant)
-    @board = board
-    @castle_rights = castle_rights
-    @en_passant_target = en_passant
+  def initialize(fen)
+    @board = fen.board
+    @castle_rights = fen.castle_rights
+    @en_passant_target = fen.en_passant
   end
 
-  def update_board(coords, move, game)
+  def update_board(coords, move)
     update_hash(coords, move)
     promote_pawn(move) if promotable?(move)
     update_en_passant(coords, move)
     update_castle_rights(coords)
-    game.history << sudo_fen
   end
 
   def update_hash(coords, move)
@@ -107,12 +101,6 @@ class Board
     display(board[coords].moves(coords, self))
   end
 
-  def sudo_fen
-    string = ''
-    board.each_value { |piece| string += char_for(piece) }
-    string
-  end
-
   private
 
   def board_copy
@@ -181,32 +169,5 @@ class Board
 
   def same_bishops?
     square_color(board.key(Bishop.new(:white))) == square_color(board.key(Bishop.new(:black)))
-  end
-
-  def char_for(piece)
-    char = piece_char(piece)
-    if piece.is_a?(Piece) && piece.color == :white?
-      char.upcase
-    else
-      char
-    end
-  end
-
-  def piece_char(piece)
-    if piece.is_a?(Pawn)
-      'p'
-    elsif piece.is_a?(Knight)
-      'n'
-    elsif piece.is_a?(Bishop)
-      'b'
-    elsif piece.is_a?(Rook)
-      'r'
-    elsif piece.is_a?(Queen)
-      'q'
-    elsif piece.is_a?(King)
-      'k'
-    else
-      ' '
-    end
   end
 end

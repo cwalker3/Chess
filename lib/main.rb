@@ -2,7 +2,8 @@
 
 require_relative 'game'
 require_relative 'save_load'
-require_relative 'fen'
+require_relative 'fen_reader'
+require_relative 'fen_writer'
 require_relative 'board'
 require_relative 'player'
 require_relative 'display'
@@ -36,13 +37,13 @@ INTRODUCTION
 choice = gets.chomp.to_i until [1, 2, 3].include?(choice)
 case choice
 when 1
-  game = Game.from_fen(Fen.new)
+  game = Game.new(FenReader.new)
 when 2
   game = Game.load
 when 3
   puts 'Enter a valid FEN string:'
   fen = gets.chomp
-  game = Game.from_fen(Fen.new(fen))
+  game = Game.new(FenReader.new(fen))
 end
 
 game.play

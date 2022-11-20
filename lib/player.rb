@@ -9,8 +9,14 @@ class Player
   end
 
   def choose_piece
-    puts "#{color.capitalize}'s turn, choose a piece to move. Enter a rank and a file, for example, 'e2'\n
-    You can also enter 'save', 'resign', 'offer_draw'"
+    puts <<~HEREDOC
+      #{color.capitalize}'s turn, choose a piece to move.
+      Enter a rank and a file.
+      e.g. 'e2'
+
+      You can also enter 'save', 'resign', 'offer_draw'
+
+    HEREDOC
     gets.chomp.downcase.to_sym
   end
 

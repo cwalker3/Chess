@@ -8,7 +8,7 @@ require_relative 'pieces/queen'
 require_relative 'pieces/king'
 
 # class that reads FEN strings to create a chess game object
-class Fen
+class FenReader
   attr_reader :fen
 
   DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'

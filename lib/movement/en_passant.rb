@@ -23,7 +23,7 @@ module EnPassant
       elsif board[move] == Pawn.new(:black) && move == down(down(position))
         down(position)
       else
-        :none
+        :-
       end
   end
 end
