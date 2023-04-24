@@ -9,11 +9,11 @@ class Game
 
   attr_reader :board, :players, :history, :halfmove, :current_player
 
-  def initialize(fen)
-    @board = Board.new(fen)
+  def initialize(board, current_player, halfmove)
+    @board = board
     @players = [Player.new(:white), Player.new(:black)]
-    @current_player = fen.current_player == :white ? players[0] : players[1]
-    @halfmove = fen.halfmove
+    @current_player = current_player == :white ? players[0] : players[1]
+    @halfmove = halfmove
     @history = [board.sudo_fen]
   end
 
@@ -27,14 +27,14 @@ class Game
   end
 
   def player_turn
-    piece_choice, move_choice = nil
+    piece_coords, move_coords = nil
     loop do
-      piece_choice = player_choose_piece
-      move_choice = player_choose_move(piece_choice)
-      break unless move_choice == :back
+      piece_coords = player_choose_piece
+      move_coords = player_choose_move(piece_coords)
+      break unless move_coords == :back
     end
-    update_halfmove(piece_choice, move_choice)
-    board.update_board(piece_choice, move_choice)
+    update_halfmove(piece_coords, move_coords)
+    board.update(piece_coords, move_coords)
   end
 
   def player_choose_piece
@@ -63,7 +63,7 @@ class Game
 
   def update_halfmove(piece_coords, move_coords)
     @halfmove =
-      if board.occupied?(move_coords) || board.board[piece_coords].is_a?(Pawn)
+      if board.occupied?(move_coords) || board.position[piece_coords].is_a?(Pawn)
         0
       else
         halfmove + 1

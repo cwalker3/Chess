@@ -6,47 +6,47 @@ require_relative 'movement'
 module KingMovement
   include Movement
 
-  def king_moves(position, board, moves = [])
-    moves << basic_moves(position, board)
+  def king_moves(coords, board, moves = [])
+    moves << basic_moves(coords, board)
     moves << if color == :white
-               castle_white(position, board)
+               castle_white(coords, board)
              else
-               castle_black(position, board)
+               castle_black(coords, board)
              end
     moves.compact.flatten
   end
 
-  def basic_moves(position, board, moves = [])
-    moves << up(position)
-    moves << up(right(position))
-    moves << right(position)
-    moves << down(right(position))
-    moves << down(position)
-    moves << down(left(position))
-    moves << left(position)
-    moves << up(left(position))
-    moves.select { |move| board.valid_coords?(move) && !board.friendly?(position, move) }
+  def basic_moves(coords, board, moves = [])
+    moves << up(coords)
+    moves << up(right(coords))
+    moves << right(coords)
+    moves << down(right(coords))
+    moves << down(coords)
+    moves << down(left(coords))
+    moves << left(coords)
+    moves << up(left(coords))
+    moves.select { |move| board.valid_coords?(move) && !board.friendly?(coords, move) }
   end
 
-  def castle_white(position, board, moves = [])
-    moves << :c1 if board.castle_rights.include?('Q') && valid_queen_castle?(position, board)
-    moves << :g1 if board.castle_rights.include?('K') && valid_king_castle?(position, board)
+  def castle_white(coords, board, moves = [])
+    moves << :c1 if board.castle_rights.include?('Q') && valid_queen_castle?(coords, board)
+    moves << :g1 if board.castle_rights.include?('K') && valid_king_castle?(coords, board)
   end
 
-  def castle_black(position, board, moves = [])
-    moves << :c8 if board.castle_rights.include?('q') && valid_queen_castle?(position, board)
-    moves << :g8 if board.castle_rights.include?('k') && valid_king_castle?(position, board)
+  def castle_black(coords, board, moves = [])
+    moves << :c8 if board.castle_rights.include?('q') && valid_queen_castle?(coords, board)
+    moves << :g8 if board.castle_rights.include?('k') && valid_king_castle?(coords, board)
   end
 
-  def valid_queen_castle?(position, board)
+  def valid_queen_castle?(coords, board)
     !board.check?(color) \
-    && board.valid_move?(position, left(position), color) && !board.occupied?(left(position)) \
-    && board.valid_move?(position, left(left(position)), color) && !board.occupied?(left(left(position)))
+    && board.valid_move?(coords, left(coords), color) && !board.occupied?(left(coords)) \
+    && board.valid_move?(coords, left(left(coords)), color) && !board.occupied?(left(left(coords)))
   end
 
-  def valid_king_castle?(position, board)
+  def valid_king_castle?(coords, board)
     !board.check?(color) \
-    && board.valid_move?(position, right(position), color) && !board.occupied?(right(position)) \
-    && board.valid_move?(position, right(right(position)), color) && !board.occupied?(right(right(position)))
+    && board.valid_move?(coords, right(coords), color) && !board.occupied?(right(coords)) \
+    && board.valid_move?(coords, right(right(coords)), color) && !board.occupied?(right(right(coords)))
   end
 end

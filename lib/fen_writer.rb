@@ -4,12 +4,12 @@
 module FenWriter
 
   def sudo_fen
-    board_fen + castle_rights + en_passant_target.to_s
+    board_fen + castle_rights + en_passant_coords.to_s
   end
 
   def board_fen
     string = ''
-    board.each_value { |piece| string += char_for(piece) }
+    position.each_value { |piece| string += char_for(piece) }
     string
   end
 

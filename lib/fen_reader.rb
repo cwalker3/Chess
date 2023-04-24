@@ -7,7 +7,7 @@ require_relative 'pieces/rook'
 require_relative 'pieces/queen'
 require_relative 'pieces/king'
 
-# class that reads FEN strings to create a chess game object
+# class that builds a Game object from a fen string
 class FenReader
   attr_reader :fen
 
@@ -27,18 +27,26 @@ class FenReader
     @fen = fen.split
   end
 
+  def game
+    Game.new(board, current_player, halfmove)
+  end
+
   def board
-    board = {}
+    Board.new(position, castle_rights, en_passant_coords)
+  end
+
+  def position
+    position_hash = {}
     rank = 7
     rows.each do |row|
       file = 0
       row.each_char do |char|
-        board[(FILES[file] + RANKS[rank]).to_sym] = piece_for(char)
+        position_hash[(FILES[file] + RANKS[rank]).to_sym] = piece_for(char)
         file += 1
       end
       rank -= 1
     end
-    board
+    position_hash
   end
 
   def current_player
@@ -49,7 +57,7 @@ class FenReader
     fen[2]
   end
 
-  def en_passant
+  def en_passant_coords
     fen[3].to_sym
   end
 
@@ -60,7 +68,7 @@ class FenReader
   private
 
   def rows
-    expand_spaces(placement).split('/')
+    expand_spaces(fen[0]).split('/')
   end
 
   def expand_spaces(string)
@@ -88,10 +96,6 @@ class FenReader
 
   def color_for(char)
     char == char.upcase ? :white : :black
-  end
-
-  def placement
-    fen[0]
   end
 
   def player

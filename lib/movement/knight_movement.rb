@@ -5,18 +5,18 @@ require_relative 'movement'
 # module for knight movement
 module KnightMovement
   include Movement
-  def knight_moves(position, board)
-    l_moves(position).filter { |move| board.valid_coords?(move) && !board.friendly?(position, move) }
+  def knight_moves(coords, board)
+    l_moves(coords).filter { |move_coords| board.valid_coords?(move_coords) && !board.friendly?(coords, move_coords) }
   end
 
-  def l_moves(position, moves = [])
-    moves << right(up(up(position)))
-    moves << right(right(up(position)))
-    moves << right(right(down(position)))
-    moves << right(down(down(position)))
-    moves << left(down(down(position)))
-    moves << left(left(down(position)))
-    moves << left(left(up(position)))
-    moves << left(up(up(position)))
+  def l_moves(coords, moves = [])
+    moves << right(up(up(coords)))
+    moves << right(right(up(coords)))
+    moves << right(right(down(coords)))
+    moves << right(down(down(coords)))
+    moves << left(down(down(coords)))
+    moves << left(left(down(coords)))
+    moves << left(left(up(coords)))
+    moves << left(up(up(coords)))
   end
 end

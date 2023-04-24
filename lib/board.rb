@@ -14,41 +14,41 @@ class Board
   include Promote
   include FenWriter
 
-  attr_accessor :board, :castle_rights, :en_passant_target, :history
+  attr_accessor :position, :castle_rights, :en_passant_coords, :history
 
-  def initialize(fen)
-    @board = fen.board
-    @castle_rights = fen.castle_rights
-    @en_passant_target = fen.en_passant
+  def initialize(position, castle_rights, en_passant_coords)
+    @position = position
+    @castle_rights = castle_rights
+    @en_passant_coords = en_passant_coords
   end
 
-  def update_board(coords, move)
-    update_hash(coords, move)
-    promote_pawn(move) if promotable?(move)
-    update_en_passant(coords, move)
-    update_castle_rights(coords)
+  def update(piece_coords, move_coords)
+    update_position(piece_coords, move_coords)
+    promote_pawn(move_coords) if promotable?(move_coords)
+    update_en_passant(piece_coords, move_coords)
+    update_castle_rights(piece_coords)
   end
 
-  def update_hash(coords, move)
-    if board[coords].is_a?(Pawn) && move == en_passant_target
+  def update_position(piece_coords, move_coords)
+    if position[piece_coords].is_a?(Pawn) && move_coords == en_passant_coords
       en_passant_capture(coords)
-    elsif board[coords].is_a?(King) && !board[coords].basic_moves(coords, self).include?(move)
-      castle(move)
+    elsif position[piece_coords].is_a?(King) && !position[piece_coords].basic_moves(piece_coords, self).include?(move_coords)
+      castle(move_coords)
     else
-      move_piece(coords, move)
+      move_piece(piece_coords, move_coords)
     end
   end
 
   def valid_piece?(coords)
-    board[coords].is_a?(Piece) && board[coords].can_move?(coords, self)
+    position[coords].is_a?(Piece) && position[coords].can_move?(coords, self)
   end
 
   def color_at(coords)
-    board[coords].color
+    position[coords].color
   end
 
   def valid_move_choice?(coords, move_coords)
-    moves = board[coords].moves(coords, self)
+    moves = position[coords].moves(coords, self)
     moves.include?(move_coords)
   end
 
@@ -71,34 +71,34 @@ class Board
     false
   end
 
-  def valid_move?(position, move, color)
+  def valid_move?(coords, move_coords, color)
     copy = board_copy
-    copy.update_hash(position, move)
+    copy.update_position(coords, move_coords)
     !copy.check?(color)
   end
 
-  def enemy?(position, other)
-    board[other].is_a?(Piece) && board[position].color != board[other].color
+  def enemy?(coords, other_coords)
+    position[other_coords].is_a?(Piece) && position[coords].color != position[other_coords].color
   end
 
-  def friendly?(position, other)
-    board[other].is_a?(Piece) && board[position].color == board[other].color
+  def friendly?(coords, other_coords)
+    position[other_coords].is_a?(Piece) && position[coords].color == position[other_coords].color
   end
 
   def occupied?(coords)
-    board[coords].is_a?(Piece)
+    position[coords].is_a?(Piece)
   end
 
   def valid_coords?(coords)
-    !board[coords].nil?
+    !position[coords].nil?
   end
 
   def ==(other)
-    board == other.board && en_passant_target == other.en_passant_target && castle_rights == other.castle_rights
+    position == other.position && en_passant_coords == other.en_passant_coords && castle_rights == other.castle_rights
   end
 
   def display_moves(coords)
-    display(board[coords].moves(coords, self))
+    display(position[coords].moves(coords, self))
   end
 
   private
@@ -107,9 +107,9 @@ class Board
     Marshal.load(Marshal.dump(self))
   end
 
-  def move_piece(coords, move)
-    board[move] = board[coords]
-    board[coords] = :empty
+  def move_piece(coords, move_coords)
+    position[move_coords] = position[coords]
+    position[coords] = :empty
   end
 
   def enemy(color)
@@ -117,19 +117,19 @@ class Board
   end
 
   def king_coords(color)
-    board.key(King.new(color))
+    position.key(King.new(color))
   end
 
   def moves(color, moves = [])
-    pieces_coords(color).each do |coord|
-      moves += board[coord].potential_moves(coord, self)
+    pieces_coords(color).each do |coords|
+      moves += position[coords].potential_moves(coords, self)
     end
     moves
   end
 
   def valid_moves(color, moves = [])
     pieces_coords(color).each do |coord|
-      moves += board[coord].moves(coord, self)
+      moves += position[coord].moves(coord, self)
     end
     moves
   end
@@ -139,11 +139,11 @@ class Board
   end
 
   def pieces_coords(color)
-    board.select { |_position, piece| piece.is_a?(Piece) && piece.color == color }.keys
+    position.select { |_coords, piece| piece.is_a?(Piece) && piece.color == color }.keys
   end
 
   def pieces(color)
-    board.select { |_position, piece| piece.is_a?(Piece) && piece.color == color }.values
+    position.select { |_coords, piece| piece.is_a?(Piece) && piece.color == color }.values
   end
 
   def k_vs_k?(color)
@@ -168,6 +168,6 @@ class Board
   end
 
   def same_bishops?
-    square_color(board.key(Bishop.new(:white))) == square_color(board.key(Bishop.new(:black)))
+    square_color(position.key(Bishop.new(:white))) == square_color(position.key(Bishop.new(:black)))
   end
 end

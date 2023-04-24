@@ -6,7 +6,7 @@ require 'colorize'
 module Display
   def display(moves = [])
     system('clear')
-    board.each_key do |coords|
+    position.each_key do |coords|
       print coords[1] if coords[0] == 'a'
       print_square(coords, moves)
       print "\n" if coords[0] == 'h'
@@ -22,7 +22,7 @@ module Display
 
   def piece_color(coords, moves)
     if occupied?(coords)
-      board[coords].color == :white ? :light_white : :black
+      position[coords].color == :white ? :light_white : :black
     elsif moves.include?(coords)
       :red
     else
@@ -32,7 +32,7 @@ module Display
 
   def string_for(coords, moves)
     if occupied?(coords)
-      "\u2009#{board[coords]}\u2009"
+      "\u2009#{position[coords]}\u2009"
     elsif moves.include?(coords)
       "\u2009\u2B24\u2009"
     else

@@ -7,21 +7,21 @@ module EnPassant
   include Movement
 
   def en_passant_capture(coords)
-    board[en_passant_target] = board[coords]
-    if board[coords] == Pawn.new(:white)
-      board[down(en_passant_target)] = :empty
+    position[en_passant_coords] = position[coords]
+    if position[coords] == Pawn.new(:white)
+      position[down(en_passant_coords)] = :empty
     else
-      board[up(en_passant_target)] = :empty
+      position[up(en_passant_coords)] = :empty
     end
-    board[coords] = :empty
+    position[coords] = :empty
   end
 
-  def update_en_passant(position, move)
-    @en_passant_target =
-      if board[move] == Pawn.new(:white) && move == up(up(position))
-        up(position)
-      elsif board[move] == Pawn.new(:black) && move == down(down(position))
-        down(position)
+  def update_en_passant(coords, move_coords)
+    @en_passant_coords =
+      if position[move_coords] == Pawn.new(:white) && move_coords == up(up(coords))
+        up(coords)
+      elsif position[move_coords] == Pawn.new(:black) && move_coords == down(down(coords))
+        down(coords)
       else
         :-
       end

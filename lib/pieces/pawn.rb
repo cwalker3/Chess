@@ -6,12 +6,12 @@ require_relative '../movement/pawn_movement'
 # pawn piece for chess
 class Pawn < Piece
   include PawnMovement
-  def moves(position, board)
-    pawn_moves(position, board).select { |move| board.valid_move?(position, move, color) }
+  def moves(coords, board)
+    pawn_moves(coords, board).select { |move_coords| board.valid_move?(coords, move_coords, color) }
   end
 
-  def potential_moves(position, board)
-    pawn_moves(position, board)
+  def potential_moves(coords, board)
+    pawn_moves(coords, board)
   end
 
   def to_s

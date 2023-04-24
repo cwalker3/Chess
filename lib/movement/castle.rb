@@ -2,8 +2,8 @@
 
 # module containing methods related to castling
 module Castle
-  def castle(move)
-    case move
+  def castle(move_coords)
+    case move_coords
     when :c1
       queen_castle_white
     when :g1
@@ -16,31 +16,31 @@ module Castle
   end
 
   def queen_castle_white
-    board[:c1] = board[:e1]
-    board[:e1] = :empty
-    board[:d1] = board[:a1]
-    board[:a1] = :empty
+    position[:c1] = position[:e1]
+    position[:e1] = :empty
+    position[:d1] = position[:a1]
+    position[:a1] = :empty
   end
 
   def king_castle_white
-    board[:g1] = board[:e1]
-    board[:e1] = :empty
-    board[:f1] = board[:h1]
-    board[:h1] = :empty
+    position[:g1] = position[:e1]
+    position[:e1] = :empty
+    position[:f1] = position[:h1]
+    position[:h1] = :empty
   end
 
   def queen_castle_black
-    board[:c8] = board[:e8]
-    board[:e8] = :empty
-    board[:d8] = board[:a8]
-    board[:a8] = :empty
+    position[:c8] = position[:e8]
+    position[:e8] = :empty
+    position[:d8] = position[:a8]
+    position[:a8] = :empty
   end
 
   def king_castle_black
-    board[:g8] = board[:e8]
-    board[:e8] = :empty
-    board[:f8] = board[:h8]
-    board[:h8] = :empty
+    position[:g8] = position[:e8]
+    position[:e8] = :empty
+    position[:f8] = position[:h8]
+    position[:h8] = :empty
   end
 
   def update_castle_rights(position)

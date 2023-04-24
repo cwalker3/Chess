@@ -5,54 +5,54 @@ require_relative 'movement'
 # module for rook movement
 module RookMovement
   include Movement
-  def rook_moves(position, board, moves = [])
-    moves += up_moves(position, board)
-    moves += down_moves(position, board)
-    moves += left_moves(position, board)
-    moves + right_moves(position, board)
+  def rook_moves(coords, board, moves = [])
+    moves += up_moves(coords, board)
+    moves += down_moves(coords, board)
+    moves += left_moves(coords, board)
+    moves + right_moves(coords, board)
   end
 
-  def up_moves(position, board, moves = [])
-    move = position
+  def up_moves(coords, board, moves = [])
+    move = coords
     loop do
       move = up(move)
-      return moves if board.board[move].nil? || board.friendly?(position, move)
+      return moves if board.position[move].nil? || board.friendly?(coords, move)
 
       moves << move
-      return moves if board.enemy?(position, move)
+      return moves if board.enemy?(coords, move)
     end
   end
 
-  def down_moves(position, board, moves = [])
-    move = position
+  def down_moves(coords, board, moves = [])
+    move = coords
     loop do
       move = down(move)
-      return moves if board.board[move].nil? || board.friendly?(position, move)
+      return moves if board.position[move].nil? || board.friendly?(coords, move)
 
       moves << move
-      return moves if board.enemy?(position, move)
+      return moves if board.enemy?(coords, move)
     end
   end
 
-  def left_moves(position, board, moves = [])
-    move = position
+  def left_moves(coords, board, moves = [])
+    move = coords
     loop do
       move = left(move)
-      return moves if board.board[move].nil? || board.friendly?(position, move)
+      return moves if board.position[move].nil? || board.friendly?(coords, move)
 
       moves << move
-      return moves if board.enemy?(position, move)
+      return moves if board.enemy?(coords, move)
     end
   end
 
-  def right_moves(position, board, moves = [])
-    move = position
+  def right_moves(coords, board, moves = [])
+    move = coords
     loop do
       move = right(move)
-      return moves if board.board[move].nil? || board.friendly?(position, move)
+      return moves if board.position[move].nil? || board.friendly?(coords, move)
 
       moves << move
-      return moves if board.enemy?(position, move)
+      return moves if board.enemy?(coords, move)
     end
   end
 end

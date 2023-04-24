@@ -2,20 +2,20 @@
 
 # movement module for chess pieces
 module Movement
-  def up(position)
-    (position[0] + next_char(position[1])).to_sym
+  def up(coords)
+    (coords[0] + next_char(coords[1])).to_sym
   end
 
-  def down(position)
-    (position[0] + prev_char(position[1])).to_sym
+  def down(coords)
+    (coords[0] + prev_char(coords[1])).to_sym
   end
 
-  def left(position)
-    (next_char(position[0]) + position[1]).to_sym
+  def left(coords)
+    (next_char(coords[0]) + coords[1]).to_sym
   end
 
-  def right(position)
-    (prev_char(position[0]) + position[1]).to_sym
+  def right(coords)
+    (prev_char(coords[0]) + coords[1]).to_sym
   end
 
   def next_char(char)

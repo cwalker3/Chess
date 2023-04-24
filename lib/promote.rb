@@ -10,13 +10,13 @@ module Promote
   def promote_pawn(move)
     
     choice = promote_input
-    color = board[move].color
-    board[move] = choices[choice].new(color)
+    color = position[move].color
+    position[move] = choices[choice].new(color)
   end
 
   def promotable?(move)
-    board[move] == Pawn.new(:white) && move[1] == '8' \
-    || board[move] == Pawn.new(:black) && move[1] == '1'
+    position[move] == Pawn.new(:white) && move[1] == '8' \
+    || position[move] == Pawn.new(:black) && move[1] == '1'
   end
 
   def promote_input

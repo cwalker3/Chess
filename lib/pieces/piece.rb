@@ -12,7 +12,7 @@ class Piece
     self.class == other.class && color == other.color
   end
 
-  def can_move?(position, board)
-    moves(position, board).length.positive?
+  def can_move?(coords, board)
+    moves(coords, board).length.positive?
   end
 end

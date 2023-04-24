@@ -37,13 +37,13 @@ INTRODUCTION
 choice = gets.chomp.to_i until [1, 2, 3].include?(choice)
 case choice
 when 1
-  game = Game.new(FenReader.new)
+  game = FenReader.new.game
 when 2
   game = Game.load
 when 3
   puts 'Enter a valid FEN string:'
   fen = gets.chomp
-  game = Game.new(FenReader.new(fen))
+  game = FenReader.new(fen).game
 end
 
 game.play

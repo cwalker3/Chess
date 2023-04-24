@@ -6,12 +6,12 @@ require_relative '../movement/bishop_movement'
 # bishop piece for chess
 class Bishop < Piece
   include BishopMovement
-  def moves(position, board)
-    bishop_moves(position, board).select { |move| board.valid_move?(position, move, color) }
+  def moves(coords, board)
+    bishop_moves(coords, board).select { |move| board.valid_move?(coords, move, color) }
   end
 
-  def potential_moves(position, board)
-    bishop_moves(position, board)
+  def potential_moves(coords, board)
+    bishop_moves(coords, board)
   end
 
   def to_s
