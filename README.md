@@ -11,6 +11,6 @@ This is a player vs player, command line chess game, made with Ruby. It is part 
 
 ## What I could change
  - The board and game classes are quite long and could be make shorter.
- - Naming - I had some trouble with naming which could be confusing to people reading my code or my future self.
+ - There is currently no validation for FEN strings.
 ## Features Could be Added
  - Chess AI - I would like to somehow implement a Stockfish AI in the future.
