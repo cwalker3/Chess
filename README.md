@@ -1,5 +1,9 @@
 # Chess
-This is a player vs player, command line chess game, made with Ruby. It is part of [The Odin Project](theodinproject.com/)'s curriculum. It is a fully functional chess game with every standard rule included that doesn't involve a timer. 
+This is a player vs player, command line chess game, made with Ruby. It is part of [The Odin Project](theodinproject.com/)'s curriculum. It is a fully functional chess game with every standard rule included that doesn't involve a timer.
+
+## Useage
+- You can fork this repo and play it locally by running bundle install and then ruby lib/main.rb
+- You can also play on the [replit](https://replit.com/@cwalker3/Chess) although it doesn't look very good on there and runs slower.
 
 ## Demo
 <img src="https://github.com/cwalker3/Chess/blob/main/demo/chess_demo.gif" />
