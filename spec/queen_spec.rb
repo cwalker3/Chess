@@ -2,7 +2,7 @@
 
 require_relative '../lib/pieces/queen'
 require_relative '../lib/board'
-require_relative '../lib/fen'
+require_relative '../lib/fen_reader'
 
 RSpec.describe Queen do
 
@@ -10,7 +10,7 @@ RSpec.describe Queen do
   
   describe 'moves' do
     context 'when queen is in the middle of the board' do
-      let(:board) { Board.from_fen(Fen.new('8/8/8/8/3Q4/8/8/8 w - - 0 1')) }
+      let(:board) { FenReader.new('8/8/8/8/3Q4/8/8/8 w - - 0 1').board }
       it 'returns the correct moves' do
         expect(queen.moves(:d4, board)).to eq(
           [:e5, :f6, :g7, :h8, :c5, :b6, :a7, :e3, :f2, :g1, :c3, :b2, :a1,
@@ -20,14 +20,14 @@ RSpec.describe Queen do
     end
 
     context do
-      let(:board) { Board.from_fen(Fen.new('8/8/8/2ppp3/2pQp3/2ppp3/8/8 w - - 0 1')) }
+      let(:board) { FenReader.new('8/8/8/2ppp3/2pQp3/2ppp3/8/8 w - - 0 1').board }
       it 'stops when she lands on an enemy' do
         expect(queen.moves(:d4, board)).to eq([:e5, :c5, :e3, :c3, :d5, :d3, :e4, :c4])
       end
     end
 
     context do
-      let(:board) { Board.from_fen(Fen.new('8/8/8/2PPP3/2PQP3/2PPP3/8/8 w - - 0 1')) }
+      let(:board) { FenReader.new('8/8/8/2PPP3/2PQP3/2PPP3/8/8 w - - 0 1').board }
       it 'stops when she lands on an enemy' do
         expect(queen.moves(:d4, board)).to eq([])
       end

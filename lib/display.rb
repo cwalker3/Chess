@@ -40,7 +40,7 @@ module Display
     end
   end
 
-  def square_color(coords, moves)
+  def square_color(coords, moves = [])
     if moves.include?(coords) && occupied?(coords)
       :red
     else

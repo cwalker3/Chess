@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../lib/fen'
+require_relative '../lib/fen_reader'
+require_relative '../lib/board'
 
-RSpec.describe Fen do
+RSpec.describe FenReader do
   subject(:fen_default) { described_class.new }
   describe 'current_player' do
     context 'when using default fen' do
@@ -12,7 +13,7 @@ RSpec.describe Fen do
     end
 
     context 'when current player is black' do
-      subject(:fen_black) { Fen.new('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1') }
+      subject(:fen_black) { FenReader.new('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1') }
       it 'returns black' do
         expect(fen_black.current_player).to eq(:black)
       end
@@ -32,11 +33,11 @@ RSpec.describe Fen do
         a1: Rook.new(:white), b1: Knight.new(:white), c1: Bishop.new(:white), d1: Queen.new(:white), e1: King.new(:white), f1: Bishop.new(:white), g1: Knight.new(:white), h1: Rook.new(:white)
       }
 
-      expect(fen_default.board).to eq(expected)
+      expect(fen_default.position).to eq(expected)
     end
 
     context 'when given a different fen string' do
-      let(:fen_two) { Fen.new('8/K7/8/8/8/1k6/1N1p4/8 w - - 0 1')}
+      let(:fen_two) { FenReader.new('8/K7/8/8/8/1k6/1N1p4/8 w - - 0 1')}
       it 'returns the correct board' do
         expected = {
           a8: :empty, b8: :empty, c8: :empty, d8: :empty, e8: :empty, f8: :empty, g8: :empty, h8: :empty,
@@ -49,7 +50,7 @@ RSpec.describe Fen do
           a1: :empty, b1: :empty, c1: :empty, d1: :empty, e1: :empty, f1: :empty, g1: :empty, h1: :empty
         }
 
-        expect(fen_two.board).to eq(expected)
+        expect(fen_two.position).to eq(expected)
       end
     end
   end

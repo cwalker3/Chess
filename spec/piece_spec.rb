@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../lib/piece'
-require_relative '../lib/pawn'
-require_relative '../lib/king'
+require_relative '../lib/pieces/piece'
+require_relative '../lib/pieces/pawn'
+require_relative '../lib/pieces/king'
 
 describe Piece do
   describe '==' do

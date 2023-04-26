@@ -31,7 +31,7 @@ class Board
 
   def update_position(piece_coords, move_coords)
     if position[piece_coords].is_a?(Pawn) && move_coords == en_passant_coords
-      en_passant_capture(coords)
+      en_passant_capture(move_coords)
     elsif position[piece_coords].is_a?(King) && !position[piece_coords].basic_moves(piece_coords, self).include?(move_coords)
       castle(move_coords)
     else
